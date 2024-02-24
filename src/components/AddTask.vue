@@ -33,6 +33,7 @@ import { ref, onMounted, onUpdated, onBeforeMount, computed } from 'vue'
 import TasksList from './TasksList.vue';
 import axios, * as others from 'axios';
 import Swal from 'sweetalert2'
+import axiosInstance from '../helpers/axios';
 
 const props = defineProps({
     inputTask: {
@@ -45,7 +46,7 @@ const lists = ref([]);
 
 const addNewTasks = async (taskName) => {
     try {
-        const response = await axios.post('http://localhost:3000/tasks',{
+        const response = await axiosInstance.post('/tasks',{
             title: taskName
         })
         const newTask = response.data
@@ -58,7 +59,7 @@ const addNewTasks = async (taskName) => {
 
 onMounted( async () => {
     try {
-        const response = await axios.get('http://localhost:3000/task')
+        const response = await axiosInstance.get('/task')
         lists.value = response.data
     } catch (error) {
         console.error('Error fetching task:', error)
@@ -77,7 +78,7 @@ const deleteTask = (taskID) => {
     }).then( async (result) => {
         if (result.isConfirmed) {
             try {
-                const delResponse = await axios.delete(`http://localhost:3000/task/${taskID}`);
+                const delResponse = await axiosInstance.delete(`/task/${taskID}`);
                 const deleteItem = delResponse.data;
                 Swal.fire({
                 title: "Deleted!",
