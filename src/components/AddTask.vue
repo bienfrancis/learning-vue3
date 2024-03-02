@@ -46,23 +46,35 @@ const lists = ref([]);
 
 const addNewTasks = async (taskName) => {
     try {
-        const response = await axiosInstance.post('/tasks',{
+        const response = await axiosInstance.post('/create',{
             title: taskName
         })
         const newTask = response.data
-        lists.value.push(newTask)
+        lists.value.unshift(newTask)
         console.log(lists.value)
     } catch (error) {
-        console.error('Error creating task:', error)
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Error creating task",
+            showConfirmButton: false,
+            timer: 3500
+        });
     }
 }
 
 onMounted( async () => {
     try {
-        const response = await axiosInstance.get('/task')
+        const response = await axiosInstance.get()
         lists.value = response.data
     } catch (error) {
-        console.error('Error fetching task:', error)
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Error fetching task:",
+            showConfirmButton: false,
+            timer: 3500
+        });
     }
 })
 
@@ -78,20 +90,19 @@ const deleteTask = (taskID) => {
     }).then( async (result) => {
         if (result.isConfirmed) {
             try {
-                const delResponse = await axiosInstance.delete(`/task/${taskID}`);
+                const delResponse = await axiosInstance.delete(`/delete/${taskID}`);
                 const deleteItem = delResponse.data;
                 Swal.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success"
+                    title: "Deleted!",
+                    text: "Your task has been deleted.",
+                    icon: "success"
                 });
                 lists.value = lists.value.filter(item => item.id !== deleteItem.id);
           } catch (error) {
-                console.error('Error deleting task:', error);
                 Swal.fire({
-                title: "Error!",
-                text: "Failed to delete the task.",
-                icon: "error"
+                    title: "Error!",
+                    text: "Failed to delete the task.",
+                    icon: "error"
                 });
           }
         }
