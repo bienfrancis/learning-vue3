@@ -10,7 +10,7 @@
             >
                 <div>
                     <h5 class="text-xl">{{ data.title }}</h5>
-                    <small>added {{ moment(data.createdAt).fromNow() }}</small>
+                    <small> added {{ moment(data.createdAt).fromNow() }}</small>
                 </div>
                 <Button
                     button-title="Del"
@@ -24,6 +24,7 @@
 import { computed, onMounted  } from 'vue';
 import moment from 'moment';
 import Button from './Button.vue';
+import { PlusIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
     datas: {
